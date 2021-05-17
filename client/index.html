@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+
+<body>
+	<h1>Jerry's playground</h1>
+	<div id="app">
+		<button @click="change_num(-1)">-</button>
+		<span>{{ num }}</span>
+		<button @click="change_num(1)">+</button>
+
+		<button @click="ping">ping</button>
+		<span>{{ message }}</span>
+	</div>
+
+	<br></br>
+
+	<h2>Simple Todo List</h2>
+	<div id="note">
+		<input v-model="input_value" @keyup.enter="add_task" autofocus="autofocus" autocomplete="off" placeholder="add task">
+		<button @click="add_task">add</button>
+		</input>
+		<ul>
+			<li v-for="(it, index) in list">
+				<span>{{ index + 1 }}</span>
+				<label>{{ it }}</label>
+				<button @click="remove_task(index)">del</button>
+			</li>
+		</ul>
+
+		<span v-if="list.length > 0">
+			<p v-text="'count: ' + list.length"></p>
+			<button @click="clear_task">clear</button>
+		</span>
+	</div>
+</body>
+
+<script src="node_modules/vue/dist/vue.js"></script>
+<script src="node_modules/axios/dist/axios.min.js"></script>
+<script>
+	var app = new Vue({
+		el: "#app",
+		data: {
+			num: 0,
+			message: "message"
+		},
+		methods: {
+			change_num: function(val) {
+				console.log("change_num ", typeof(val), val);
+				if (val != 1 && val != -1) return;
+				console.log("add", val);
+				if (this.num + val > 10 || this.num + val < 0)
+					alert("Warning: number overflow!");
+				else
+					this.num += val;
+			},
+			ping: function() {
+				var that = this;
+				axios.get("http://www.jinruiz.cn:8080/ping").then(function(response) {
+					//console.log(response);
+					that.message = response.data.message;
+				}, function(err) {})
+			}
+		}
+	});
+
+	var note = new Vue({
+		el: "#note",
+		data: {
+			list: [],
+			input_value: ""
+		},
+		methods: {
+			add_task: function() {
+				if (this.input_value != "") {
+					this.list.push(this.input_value);
+					this.input_value = "";
+				}
+			},
+
+			remove_task: function(index) {
+				this.list.splice(index, 1);
+			},
+
+			clear_task: function() {
+				this.list = [];
+			}
+		}
+	});
+</script>
+
+
+</html>

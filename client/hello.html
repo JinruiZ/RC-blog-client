@@ -1,0 +1,30 @@
+<html>
+
+<head>
+	<title></title>
+	<script src="node_modules/vue/dist/vue.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<h1>{{ head }}</h1>
+		<h2 v-html="message" @click="doit"></h2>
+	</div>
+	<script type="text/javascript">
+		var app = new Vue({
+			el: '#app', //这是element
+			data: {
+				head: "Jerry's playground",
+				message: 'Hello baby!'
+			},
+			methods: {
+				doit: function() {
+					this.message += "<br> I love you!";
+				}
+			}
+		})
+	</script>
+
+</body>
+
+</html>
